@@ -10,26 +10,24 @@ const authenticateToken = require('./middleware/authenticateToken');
 const errorHandler = require('./middleware/errorHandler');
 const { admin, db } = require('./config/firebaseConfig');
 
-
-
 const app = express();
 
-// app.use(bodyParser.json());
+// Middleware untuk body parsing
+app.use(bodyParser.json());
 
+// Rute utama
 app.get('/', (req, res) => {
   res.send('API sudah berjalan...');
 });
 
-app.use(express.json());
-
+// Rute tanpa otentikasi
 app.use('/auth', authRoutes);
-app.use('/register', registerRoutes);
+app.use('/register', registerRoutes); // Menambahkan rute register
+
+// Rute dengan otentikasi
 app.use('/admin', authenticateToken, adminRoutes);
 app.use('/parent', authenticateToken, parentRoutes);
 app.use('/tu', authenticateToken, tuRoutes);
-
-// Use body-parser middleware
-app.use(bodyParser.json());
 
 // Middleware untuk penanganan error
 app.use(errorHandler);
